@@ -37,7 +37,7 @@ public class MainAdapter extends RecyclerView.Adapter {
         ImageView imPhoto = holder.itemView.findViewById(R.id.imItem);
         int w = (int) mainActivity.getResources().getDimension(R.dimen.itemWidth);
         int h = (int) mainActivity.getResources().getDimension(R.dimen.itemHeight);
-        Bitmap bitmap = Utils.getBitmap(photos.get(position), w, h);
+        Bitmap bitmap = Util.getBitmap(photos.get(position), w, h);
         imPhoto.setImageBitmap(bitmap);
         imPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
