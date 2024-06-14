@@ -3,6 +3,7 @@ package souza.guilherme.galeria;
 
 
 import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,13 +24,16 @@ public class MainAdapter extends RecyclerView.Adapter {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Infla o layout do item da lista
+        // Usado para ler o arquivo xml de layout do item e então criar os elementos de interface propriamente ditos
+        LayoutInflater inflater = LayoutInflater.from(mainActivity);
+        View v = inflater.inflate(R.layout.list_item, parent, false);
+        return new MyViewHolder(v);
     }
-
     @Override
     public int getItemCount() {
-        return 0;
+        return photos.size();
     }
 
     @Override

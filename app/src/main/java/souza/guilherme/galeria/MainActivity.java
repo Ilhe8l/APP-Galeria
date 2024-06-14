@@ -1,6 +1,9 @@
 package souza.guilherme.galeria;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -10,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.Manifest;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -33,7 +37,6 @@ import java.util.Date;
 import java.util.List;
 
 
-
 public class MainActivity extends AppCompatActivity {
 
     static int RESULT_TAKE_PICTURE = 1;
@@ -53,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        List<String> permissions = new ArrayList<>();
+        permissions.add(Manifest.permission.CAMERA);
+        checkForPermissios(permissions);
 
         Toolbar toolbar = findViewById(R.id.tbMain);
         setSupportActionBar(toolbar);
@@ -126,11 +133,11 @@ public class MainActivity extends AppCompatActivity {
 
         for(String permission : permissions){
             if(!hasPermission(permission)){
-                permissionsNotGranted.add(permission)
+                permissionsNotGranted.add(permission);
             }
         }
 
-        if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.M)){
+        if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.M){
             if(permissionsNotGranted.size() > 0){
                 requestPermissions(permissionsNotGranted.toArray(new String[permissionsNotGranted.size()]), RESULT_REQUEST_PERMISSION);
             }
@@ -160,7 +167,12 @@ public class MainActivity extends AppCompatActivity {
         if(permissionsRejected.size()>0){
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 if(shouldShowRequestPermissionRationale(permissionsRejected.get(0))){
-                    /*Continuar daqui, final da página 26*/
+                    new AlertDialog.Builder(MainActivity.this).setMessage("Para usar essa app é preciso conceder essas permissões").setPositiveButton("OK", new DialogInterface.OnClickListener(){
+                        @Override /*SEI LÁ*/
+                        public void onClick(DialogInterface dialog, int which){
+                            requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), RESULT_REQUEST_PERMISSION);
+                        }
+                    }).create().show();
                 }
 
             }
@@ -169,14 +181,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
-        switch (item.getItemId()){
-            case R.id.opCamera:
-                dispatchTakePictureIntent();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.opCamera) {
+            dispatchTakePictureIntent();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void  startPhotoActivity(String photoPath){
