@@ -38,43 +38,56 @@ public class PhotoActivity extends AppCompatActivity {
             return insets;
         });
 
-        Toolbar toolbar = findViewById(R.id.tbPhoto);
-        setSupportActionBar(toolbar);
+    // Obtém a referência para a Toolbar pelo ID e a define como a ActionBar da Activity
+    Toolbar toolbar = findViewById(R.id.tbPhoto);
+    setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+    // Obtém a referência para a ActionBar e habilita o botão "up" para navegação
+    ActionBar actionBar = getSupportActionBar();
+    actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Intent i = getIntent();
-        photoPath = i.getStringExtra("photo_path");
+    // Obtém o Intent que iniciou a Activity e extrai o caminho da foto
+    Intent i = getIntent();
+    photoPath = i.getStringExtra("photo_path");
 
-        Bitmap bitmap = Util.getBitmap(photoPath);
-        ImageView imPhoto = findViewById(R.id.imPhoto);
-        imPhoto.setImageBitmap(bitmap);
+    // Converte o caminho da foto em um Bitmap e define esse Bitmap em um ImageView
+    Bitmap bitmap = Util.getBitmap(photoPath);
+    ImageView imPhoto = findViewById(R.id.imPhoto);
+    imPhoto.setImageBitmap(bitmap);
     }
 
+    // Método que lida com a seleção de itens no menu de opções
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Verifica se o item selecionado é o de compartilhar
         if (item.getItemId() == R.id.opShare) {
-            sharePhoto();
+            sharePhoto(); // Chama o método para compartilhar a foto
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item); // Chama o método da superclasse
     }
 
+    // Método que cria o menu de opções
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.photo_activity_tb, menu);
-        return true;
+        super.onCreateOptionsMenu(menu); // Chama o método da superclasse
+        MenuInflater inflater = getMenuInflater(); // Obtém o inflador de menus
+        inflater.inflate(R.menu.photo_activity_tb, menu); // Infla o layout do menu
+        return true; // Indica que o menu foi criado com sucesso
     }
 
-    void sharePhoto(){
-        //Codigo para compartilhar a foto
+    // Método para compartilhar a foto
+    void sharePhoto() {
+        // Cria uma URI para a foto usando o FileProvider
         Uri photoUri = FileProvider.getUriForFile(PhotoActivity.this, "souza.guilherme.galeria.fileprovider", new File(photoPath));
+
+        // Cria um Intent de envio e adiciona a URI da foto como extra
         Intent i = new Intent(Intent.ACTION_SEND);
         i.putExtra(Intent.EXTRA_STREAM, photoUri);
-        i.setType("image/jpeg");
+        i.setType("image/jpeg"); // Define o tipo MIME como imagem JPEG
+
+        // Inicia uma Activity
         startActivity(i);
     }
+
 }
